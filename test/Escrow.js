@@ -27,6 +27,9 @@ describe("Escrow", () => {
       )
 
       const result = await escrow.nftAddress()
-      console.log(result)
+      expect(result).equal(realEstate.address)
+
+      const escrow_seller = await escrow.seller()
+      expect(escrow_seller).equal(seller.address)
    })
 })
