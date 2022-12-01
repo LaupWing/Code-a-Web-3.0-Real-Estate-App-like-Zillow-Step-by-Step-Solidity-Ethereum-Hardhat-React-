@@ -52,4 +52,10 @@ describe("Escrow", () => {
          expect(result).equal(lender.address)
       })
    })
+
+   describe("Listing", () => {
+      it("Updates the ownership", async () => {
+         expect(await realEstate.ownerOf(1)).equal(escrow.address)
+      })
+   })
 })
