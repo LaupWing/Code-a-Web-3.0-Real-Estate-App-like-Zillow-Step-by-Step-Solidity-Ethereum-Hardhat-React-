@@ -9,13 +9,17 @@ describe("Escrow", () => {
    let buyer, seller, inspector, lender
    let realEstate, escrow
 
-   it("saves the addresses", async ()=>{
-      [buyer, seller, inspector, lender] = await ethers.getSigners()
+   beforeEach(async () => {
+      ;[buyer, seller, inspector, lender] = await ethers.getSigners()
 
       const RealEstate = await ethers.getContractFactory("RealEstate")
       realEstate = await RealEstate.deploy()
-      
-      let transaction = await realEstate.connect(seller).mint("https://ipfs.io/ipfs/QmTudSYeM7mz3PkYEWXWqPjomRPHogcMFSq7XAvsvsgAPS")
+
+      let transaction = await realEstate
+         .connect(seller)
+         .mint(
+            "https://ipfs.io/ipfs/QmTudSYeM7mz3PkYEWXWqPjomRPHogcMFSq7XAvsvsgAPS"
+         )
       await transaction.wait()
 
       const Escrow = await ethers.getContractFactory("Escrow")
@@ -25,11 +29,27 @@ describe("Escrow", () => {
          inspector.address,
          lender.address
       )
+   })
 
-      const result = await escrow.nftAddress()
-      expect(result).equal(realEstate.address)
+   describe("Deployment", () => {
+      it("Returns NFT address", async () => {
+         const result = await escrow.nftAddress()
+         expect(result).equal(realEstate.address)
+      })
 
-      const escrow_seller = await escrow.seller()
-      expect(escrow_seller).equal(seller.address)
+      it("Returns seller", async () => {
+         const result = await escrow.seller()
+         expect(result).equal(seller.address)
+      })
+
+      it("Returns inspector", async () => {
+         const result = await escrow.inspector()
+         expect(result).equal(inspector.address)
+      })
+
+      it("Returns lender", async () => {
+         const result = await escrow.lender()
+         expect(result).equal(lender.address)
+      })
    })
 })
