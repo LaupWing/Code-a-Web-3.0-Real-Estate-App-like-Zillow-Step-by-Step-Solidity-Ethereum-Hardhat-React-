@@ -10,7 +10,7 @@ describe("Escrow", () => {
    let realEstate, escrow
 
    beforeEach(async () => {
-      [buyer, seller, inspector, lender] = await ethers.getSigners()
+      ;[buyer, seller, inspector, lender] = await ethers.getSigners()
 
       const RealEstate = await ethers.getContractFactory("RealEstate")
       realEstate = await RealEstate.deploy()
@@ -35,7 +35,9 @@ describe("Escrow", () => {
       await transaction.wait()
 
       // List property
-      transaction = await escrow.connect(seller).list(1, buyer.address, tokens(10), tokens(5))
+      transaction = await escrow
+         .connect(seller)
+         .list(1, buyer.address, tokens(10), tokens(5))
       await transaction.wait()
    })
 
@@ -62,7 +64,7 @@ describe("Escrow", () => {
    })
 
    describe("Listing", () => {
-      it("Updates as listed", async ()=>{
+      it("Updates as listed", async () => {
          const result = await escrow.isListed(1)
          expect(result).equal(true)
       })
@@ -71,19 +73,30 @@ describe("Escrow", () => {
          expect(await realEstate.ownerOf(1)).equal(escrow.address)
       })
 
-      it("Returns buyer", async () =>{
+      it("Returns buyer", async () => {
          const result = await escrow.buyer(1)
          expect(result).equal(buyer.address)
       })
 
-      it("Returns the purchase price", async ()=>{
+      it("Returns the purchase price", async () => {
          const result = await escrow.purchasePrice(1)
          expect(result).equal(tokens(10))
       })
 
-      it("Returns escrow amount", async ()=>{
+      it("Returns escrow amount", async () => {
          const result = await escrow.escrowAmount(1)
          expect(result).equal(tokens(5))
+      })
+   })
+
+   describe("Deposits", () => {
+      it("Updates contract balance", async () => {
+         const transaction = await escrow.connect(buyer).depositEarnest(1, {
+            value: tokens(5)
+         })
+         await transaction.wait()
+         const result = await escrow.getBalance()
+         expect(result).equal(5)
       })
    })
 })
