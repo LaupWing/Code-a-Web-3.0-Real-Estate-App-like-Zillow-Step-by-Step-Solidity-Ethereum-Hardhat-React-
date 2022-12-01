@@ -108,4 +108,11 @@ describe("Escrow", () => {
          expect(result).equal(true)
       })
    })
+
+   describe("Approval", () => {
+      it("Updates approval status", async () => {
+         const transaction = await escrow.connect(inspector).updateInsectionStatus(1, true)
+         await transaction.wait()
+      })
+   })
 })

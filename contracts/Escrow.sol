@@ -69,6 +69,11 @@ contract Escrow {
    {
       inspectionPassed[_nftId] = _passed;
    }
+
+   function approveSale(uint256 _nftId) public {
+      approval[_nftId][msg.sender] = true;
+   }
+
    receive() external payable {}
 
    function getBalance() public view returns(uint256){
