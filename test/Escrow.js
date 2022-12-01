@@ -10,7 +10,7 @@ describe("Escrow", () => {
    let realEstate, escrow
 
    beforeEach(async () => {
-      ;[buyer, seller, inspector, lender] = await ethers.getSigners()
+      [buyer, seller, inspector, lender] = await ethers.getSigners()
 
       const RealEstate = await ethers.getContractFactory("RealEstate")
       realEstate = await RealEstate.deploy()
@@ -29,6 +29,14 @@ describe("Escrow", () => {
          inspector.address,
          lender.address
       )
+
+      // Approver property
+      transaction = await realEstate.connect(seller).approve(escrow.address, 1)
+      await transaction.wait()
+
+      // List property
+      transaction = await escrow.connect(seller).list(1)
+      await transaction.wait()
    })
 
    describe("Deployment", () => {
