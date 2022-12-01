@@ -62,6 +62,11 @@ describe("Escrow", () => {
    })
 
    describe("Listing", () => {
+      it("Updates as listed", async ()=>{
+         const result = await escrow.isListed(1)
+         expect(result).equal(true)
+      })
+
       it("Updates the ownership", async () => {
          expect(await realEstate.ownerOf(1)).equal(escrow.address)
       })
