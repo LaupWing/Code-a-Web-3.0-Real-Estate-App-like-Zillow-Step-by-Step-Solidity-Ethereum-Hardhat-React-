@@ -99,4 +99,13 @@ describe("Escrow", () => {
          expect(result).equal(5)
       })
    })
+
+   describe("Inspection", () => {
+      it("Updates contract balance", async () => {
+         const transaction = await escrow.connect(inspector).updateInsectionStatus(1, true)
+         await transaction.wait()
+         const result = await escrow.insectionPassed()
+         expect(result).equal(5)
+      })
+   })
 })
